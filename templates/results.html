@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}
+Results
+{% endblock %}
+
+{% block head %}
+Search results
+{% endblock %}
+
+{% block body %}
+<div class="form-group">
+<form method="post" action={{url_for('results')}}>
+  <input type="text" name="search" placeholder="Enter title, author, isbn">
+  <button class="btn btn-md">Search</button>
+</form>
+</div>
+<div class="list">
+  {% for result in results %}
+    <li><a href="#">{{result.isbn}} {{result.title}} by {{result.author}} </a></li>
+  {% endfor %}
+</div>
+
+{% endblock %}

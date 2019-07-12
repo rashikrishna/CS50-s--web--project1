@@ -1,0 +1,25 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <div class="v-header">
+
+      </div>
+      <div class="header-content">
+        <hr><h1>WELCOME TO Book-d <i class="fas fa-book"></i></h1><hr>
+        <h2>{% block head %}{% endblock %}</h2>
+        {% block body %}
+        {% endblock %}
+      </div>
+
+
+  </body>
+<html>
