@@ -24,9 +24,24 @@ db = scoped_session(sessionmaker(bind=engine))
 message=""
 
 
-@app.route("/")
+@app.route("/", methods=["POST","GET"])
 def index():
-    return render_template("index.html",message=message)
+    if method=="post":
+        username=request.form.get("username")
+        password=request.form.get("password")
+        repassword=request.form.get("repassword")
+
+        if repassword!=password:
+            message="Password doesn't match"
+            return redirect(url_for('index'))
+        else:
+            db.execute("INSERT INTO books (username, password) VALUES (:username, :password)",{"username":username,"password":password})
+            db.commit()
+            message="Success! You can login now"
+            return redirect(url_for('index'))
+
+    else :
+        return render_template("index.html",message=message)
 
 #defining register
 def register():
