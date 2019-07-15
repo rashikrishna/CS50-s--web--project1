@@ -21,47 +21,37 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-message=""
+message=('')
 
-
-@app.route("/", methods=["POST","GET"])
+@app.route("/", methods=["POST", "GET"])
 def index():
-    if method=="post":
+    message=("")
+    if request.method == "post":
         username=request.form.get("username")
         password=request.form.get("password")
         repassword=request.form.get("repassword")
 
-        if repassword!=password:
-            message="Password doesn't match"
-            return redirect(url_for('index'))
+        if repassword != password:
+            message=("Password doesn't match")
         else:
             db.execute("INSERT INTO books (username, password) VALUES (:username, :password)",{"username":username,"password":password})
             db.commit()
-            message="Success! You can login now"
-            return redirect(url_for('index'))
+            message=("Success! You can login now")
+            return render_template("index.html",message=message)
 
-    else :
-        return render_template("index.html",message=message)
 
-#defining register
-def register():
-    username=request.form.get("username")
-    password=request.form.get("password")
-    repassword=request.form.get("repassword")
-
-    if repassword!=password:
-        message="Password doesn't match"
+    return render_template("index.html",message=message)
 
 
 @app.route("/home",methods=["POST"])
 def home():
     user=request.form.get("v_username")
     pwd=request.form.get("v_password")
-    query=db.execute("SELECT userid FROM users WHERE username=:user AND password=:pwd",{"user":user,"pwd":pwd}).fetchone()
+    query=db.execute("SELECT * FROM users WHERE username=:user AND password=:pwd",{"user":user,"pwd":pwd}).fetchone()
     if query is None:
-        message="Username or Password Incorrect"
-        return redirect(url_for("index"))
-    return render_template("home.html",user=query.userid)
+        message=("Username or Password Incorrect")
+        return render_template("index.html",message=message)
+    return render_template("home.html",user=query.username)
 
 @app.route("/results", methods=["POST"])
 def results():

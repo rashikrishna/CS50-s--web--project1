@@ -11,22 +11,22 @@ Start Reading
 {% block body %}
 <div class="message">*{{message}}*</div>
 <div class="form-group">
-  <form action="#" mathod="post" class="register">
+  <form action="{{url_for('index')}}" method="post" class="register">
     <b><legend>Register Here </legend></b>
-    <input type="email" placeholder="Enter Your Email" name="username">
+    <input type="email" placeholder="Enter Your Email" name="username" autocomplete="off">
     <br>
-    <input type="password" placeholder="Your Password" name="password">
+    <input type="password" placeholder="Your Password" name="password" autocomplete="off">
     <br>
-    <input type="password" placeholder="Retype password" name="repassword">
+    <input type="password" placeholder="Retype password" name="repassword" autocomplete="off">
     <br></br>
     <button nmae="OK" class="btn btn-md">Submit</button>
   </form>
 
   <form action="{{ url_for('home') }}" method="post" class="signin">
     <b><legend>Sign In</legend></b>
-    <input type="email" name="v_username" placeholder="Username">
+    <input type="email" name="v_username" placeholder="Username"  autocomplete="off">
     <br>
-    <input type="password" name="v_password" placeholder="Password">
+    <input type="password" name="v_password" placeholder="Password" autocomplete="off">
     <br><br>
     <button class="btn btn-md">Sign In</button>
   </form>
