@@ -48,10 +48,9 @@ body {
 
 
 .btn{
-  background-color: #4CAF50;
-  opacity: 5;
+  background-color: transparent;
   padding: 15px 25px;
-  color: #000000;
+  color: #fff;
   font-weight: bold;
   text-align: center;
   cursor: pointer;
@@ -59,7 +58,9 @@ body {
 }
 
 .btn:hover{
-  background-color: green;
+  background-color: #fff;
+  color: #000;
+
 }
 
 form{
@@ -105,4 +106,10 @@ input{
 .list{
     background-color: #000;
 
+}
+
+.book-details{
+  opacity: 0.70;
+  background-color: #210106;
+  padding :15px;
 }
