@@ -65,6 +65,7 @@ body {
 
 form{
   background-color: #000;
+  opacity: 1;
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 10px;
@@ -105,6 +106,19 @@ input{
 
 .list{
     background-color: #000;
+
+}
+
+.book-detail{
+  display:flex;
+  margin-left: 40%;
+
+}
+
+.book-detail .rating{
+  background-color :#000;
+  z-index: 3;
+  margin-left: 10%;
 
 }
 

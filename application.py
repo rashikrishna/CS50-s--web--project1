@@ -1,4 +1,5 @@
 import os
+import json
 import requests
 from flask import Flask, session, render_template,request, url_for,redirect, jsonify
 from flask_session import Session
@@ -22,7 +23,6 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 message=('')
-logged_user=("")
 
 @app.route("/", methods=["POST", "GET"])
 def index():
@@ -53,35 +53,40 @@ def home():
     if query is None:
         message=("Username or Password Incorrect")
         return render_template("index.html",message=message)
-    logged_user=user
-    return render_template("home.html",user=query.username)
+    session["logged_user"]=user
+    return render_template("home.html",user=session["logged_user"])
 
 @app.route("/results", methods=["POST"])
 def results():
+    logged_user=session.get("logged_user")
     search=request.form.get("search")
     if db.execute("SELECT * from books WHERE author iLIKE '%"+search+"%' OR isbn iLIKE '%"+search+"%' OR title iLIKE '%"+search+"%' ",{"type":type,"search":search}).fetchone() is None:
         return render_template("results.html",res="No results Found")
     results=db.execute("SELECT * from books WHERE author iLIKE '%"+search+"%' OR isbn iLIKE '%"+search+"%' OR title iLIKE '%"+search+"%' ",{"type":type,"search":search}).fetchall()
-    return render_template("results.html",results=results)
+    return render_template("results.html",results=results,user=logged_user)
 
 #roue for book-details
 @app.route("/isbn/<string:isbn>",methods=["POST","GET"])
 def bookpage(isbn):
+    logged_user=session.get("logged_user")
     err=("")
     review=db.execute("SELECT * FROM reviews where isbn=:isbn",{"isbn":isbn}).fetchall()
     book=db.execute("SELECT * FROM books WHERE isbn = :isbn",{"isbn":isbn}).fetchone()
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params= {"isbns":isbn, "key":"XMNPkrbVcr69QOm8TcPSwQ"})
+    data=res.json()["books"][0]["average_rating"]
+    count=res.json()["books"][0]["work_ratings_count"]
 
     if request.method == "POST":
         if db.execute("SELECT * FROM reviews where username=:u AND isbn=:isbn",{"u":logged_user, "isbn":isbn}).fetchone() is None:
             new_review=request.form.get("review")
             rating=int(request.form.get("rating"))
-            db.execute("INSERT INTO reviews (username,isbn,review,rating) VALUES (:a, :b, :c, :d)", {"a":logged_user, "b":isbn, "c":new_review, "d":rating})
+            db.execute("INSERT INTO reviews (username, review, isbn, rating) VALUES (:a, :b, :c, :d)", {"a":logged_user, "c":isbn, "b":new_review, "d":rating})
             db.commit()
         else:
             review=db.execute("SELECT * FROM reviews where isbn=:isbn",{"isbn":isbn}).fetchall()
             err=("Only one review")
 
-    return render_template("book.html",book=book, err=err, review=review)
+    return render_template("book.html",book=book, err=err, review=review, user=logged_user, rating=data, count=count)
 
 
 #creating api

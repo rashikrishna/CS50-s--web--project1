@@ -23,7 +23,6 @@ Search results
           </form>
         </div>
       </li>
-    <center>{{res}}</center>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li><a href"#">"<span class="glyphicon glyphicon-user"></span>{{user}}</a></li>
@@ -31,6 +30,7 @@ Search results
     </ul>
   </div>
 </nav>
+  <center>{{res}}</center>
 <div class="list">
   {% for result in results %}
     <li><a href="/isbn/{{result.isbn}}" value="{{result.isbn}}">{{result.isbn}} {{result.title}} by {{result.author}} </a></li>
