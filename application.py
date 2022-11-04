@@ -72,7 +72,15 @@ def bookpage(isbn):
     err=("")
     review=db.execute("SELECT * FROM reviews where isbn=:isbn",{"isbn":isbn}).fetchall()
     book=db.execute("SELECT * FROM books WHERE isbn = :isbn",{"isbn":isbn}).fetchone()
+
+    # TODO: Use open libraty APIs, GR have deprecated their API
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params= {"isbns":isbn, "key":"XMNPkrbVcr69QOm8TcPSwQ"})
+
+    # Check if the response is valid.
+    if res.status_code != 200:
+        err = "Server authorization error"
+        return render_template("book.html",book=book, err=err, review=review, user=logged_user, rating=0, count=0)
+
     data=res.json()["books"][0]["average_rating"]
     count=res.json()["books"][0]["work_ratings_count"]
 
